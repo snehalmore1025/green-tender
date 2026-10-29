@@ -1,0 +1,22 @@
+{% extends 'nursery_base.html' %}
+{% block title %}Quotation Details | GreenTender{% endblock %}
+{% block page_title %}Quotation Details{% endblock %}
+{% block page_subtitle %}Review your submitted quotation and administrator feedback.{% endblock %}
+{% block content %}
+<div class="grid2">
+<section class="card">
+  <h2>{{ quotation.tender_title }}</h2><p class="sub">{{ quotation.location }} · {{ quotation.plant_type }}</p>
+  <div class="grid3" style="margin-top:20px">
+    <div><div class="detail-label">Quoted Price</div><div class="detail-value">₹{{ '%.0f'|format(quotation.quoted_price or 0) }}</div></div>
+    <div><div class="detail-label">Quantity</div><div class="detail-value">{{ quotation.quantity_available }}</div></div>
+    <div><div class="detail-label">Delivery</div><div class="detail-value">{{ quotation.delivery_days }} days</div></div>
+    <div><div class="detail-label">Status</div><div class="detail-value"><span class="status {% if quotation.status=='Pending' %}pending{% elif quotation.status=='Rejected' %}rejected{% endif %}">{{ quotation.status }}</span></div></div>
+  </div>
+  <div class="notice"><strong>Quotation Description</strong><p class="sub" style="margin:6px 0 0">{{ quotation.quotation_description or 'No description provided.' }}</p></div>
+</section>
+<section class="card">
+  <h2>Administrator Remarks</h2><p class="sub">Feedback associated with this quotation.</p>
+  {% for r in remarks %}<div class="notification"><strong>{{ r.remark }}</strong><br><small>{{ r.remarked_at }}</small></div>{% else %}<div class="empty">No remarks yet.</div>{% endfor %}
+</section>
+</div>
+{% endblock %}

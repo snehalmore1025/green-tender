@@ -1,0 +1,24 @@
+{% extends 'nursery_base.html' %}
+{% block title %}Submit Quotation | GreenTender{% endblock %}
+{% block page_title %}Submit Quotation{% endblock %}
+{% block page_subtitle %}Submit your commercial offer for the selected plantation tender.{% endblock %}
+{% block content %}
+<section class="card">
+  <h2>{{ tender.title }}</h2>
+  <p class="sub">Budget ₹{{ '%.0f'|format(tender.estimated_budget or 0) }} · Required quantity {{ tender.quantity_required }} plants · Closing {{ tender.closing_date }}</p>
+  {% if not nursery or nursery.verification_status != 'Verified' %}
+    <div class="notice"><strong>Verification required</strong><p class="sub">Your nursery must be verified by the administrator before you can submit a bid.</p></div>
+  {% else %}
+  <form method="post" enctype="multipart/form-data" style="margin-top:20px">
+    <div class="form-grid">
+      <div class="field"><label class="label">Quoted Price</label><input type="number" name="quoted_price" min="1" step="0.01" required></div>
+      <div class="field"><label class="label">Quantity Available</label><input type="number" name="quantity_available" min="1" required></div>
+      <div class="field"><label class="label">Delivery Days</label><input type="number" name="delivery_days" min="1" required></div>
+      <div class="field"><label class="label">Plant Photo</label><input type="file" name="plant_photo" accept=".jpg,.jpeg,.png,.webp"></div>
+    </div>
+    <div class="field"><label class="label">Quotation Description</label><textarea name="quotation_description" placeholder="Describe plant quality, supply capability, maintenance or other relevant details."></textarea></div>
+    <button class="btn" type="submit"><i class="bi bi-send"></i> Submit Bid</button>
+  </form>
+  {% endif %}
+</section>
+{% endblock %}

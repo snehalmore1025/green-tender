@@ -1,0 +1,19 @@
+{% extends 'nursery_base.html' %}
+{% block title %}Orders | GreenTender{% endblock %}
+{% block page_title %}Orders & Delivery{% endblock %}
+{% block page_subtitle %}Track approved work and the latest delivery status.{% endblock %}
+{% block content %}
+<section class="card">
+  <div class="inline"><div><h2>Approved Work & Delivery Status</h2><p class="sub">Monitor approved quotations from assignment through delivery.</p></div><span class="status">{{ orders|length }} Approved</span></div>
+  <div class="table-wrap" style="margin-top:18px">
+    <table class="table">
+      <thead><tr><th>Tender</th><th>Location</th><th>Plant</th><th>Price</th><th>Quantity</th><th>Promised</th><th>Status</th><th>Dates</th><th>Remark</th></tr></thead>
+      <tbody>
+      {% for q in orders %}
+        <tr><td><strong>{{ q.title }}</strong></td><td>{{ q.location }}</td><td>{{ q.plant_type }}</td><td>₹{{ '%.2f'|format(q.quoted_price or 0) }}</td><td>{{ q.quantity_available }}</td><td>{{ q.delivery_days }} days</td><td><span class="status {% if q.delivery_status=='In Progress' %}progress{% elif q.delivery_status=='Delivered' %}delivered{% else %}pending{% endif %}">{{ q.delivery_status or 'Pending' }}</span></td><td>Expected: {{ q.expected_delivery_date or '-' }}<br>Actual: {{ q.actual_delivery_date or '-' }}</td><td>{{ q.delivery_remark or '-' }}</td></tr>
+      {% else %}<tr><td colspan="9" class="empty">No approved work yet.</td></tr>{% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

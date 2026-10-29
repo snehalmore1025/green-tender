@@ -1,0 +1,22 @@
+{% extends 'nursery_base.html' %}
+{% block title %}Tenders | GreenTender{% endblock %}
+{% block page_title %}Tenders{% endblock %}
+{% block page_subtitle %}Browse open plantation opportunities and participate with a quotation.{% endblock %}
+{% block content %}
+<section class="card">
+  <div class="inline"><div><h2>Available Plantation Tenders</h2><p class="sub">Only currently open tenders are shown.</p></div><span class="status">{{ tenders|length }} Open</span></div>
+  <div class="table-wrap" style="margin-top:18px">
+    <table class="table">
+      <thead><tr><th>Tender</th><th>Location</th><th>Road</th><th>Plant</th><th>Qty</th><th>Budget</th><th>Closing</th><th>Action</th></tr></thead>
+      <tbody>
+      {% for t in tenders %}
+        <tr>
+          <td><strong>{{ t.title }}</strong></td><td>{{ t.location }}</td><td>{{ t.road_name }}</td><td>{{ t.plant_type }}</td><td>{{ t.quantity_required }}</td><td>₹{{ '%.0f'|format(t.estimated_budget or 0) }}</td><td>{{ t.closing_date }}</td>
+          <td>{% if t.already_quoted %}<span class="status">Submitted</span>{% else %}<a class="btn" href="{{ url_for('nursery.tender_details',tender_id=t.tender_id) }}"><i class="bi bi-eye"></i> View</a>{% endif %}</td>
+        </tr>
+      {% else %}<tr><td colspan="8" class="empty">No open tenders available.</td></tr>{% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Verify OTP | GreenTender</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #f1f7f3;
+        }
+
+        .container {
+            width: 430px;
+            background: white;
+            padding: 40px;
+            border-radius: 18px;
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.10);
+        }
+
+        .logo {
+            text-align: center;
+            font-size: 28px;
+            font-weight: 700;
+            color: #1b4332;
+            margin-bottom: 25px;
+        }
+
+        .logo span {
+            color: #40916c;
+        }
+
+        .icon {
+            width: 65px;
+            height: 65px;
+            margin: 0 auto 18px;
+            border-radius: 50%;
+            background: #e8f5ed;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 28px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #26352d;
+            font-size: 22px;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #7b8580;
+            font-size: 12px;
+            line-height: 1.6;
+            margin-bottom: 18px;
+        }
+
+        .email {
+            text-align: center;
+            color: #2d6a4f;
+            font-size: 11px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .message {
+            padding: 10px;
+            margin-bottom: 18px;
+            border-radius: 7px;
+            background: #fde8e8;
+            color: #b42318;
+            font-size: 11px;
+            text-align: center;
+        }
+
+        .success {
+            background: #e7f6ec;
+            color: #287047;
+        }
+
+        .otp {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #d5ddd8;
+            border-radius: 8px;
+            outline: none;
+            text-align: center;
+            font-size: 25px;
+            font-weight: 600;
+            letter-spacing: 10px;
+            margin-bottom: 20px;
+        }
+
+        .otp:focus {
+            border-color: #40916c;
+            box-shadow: 0 0 0 3px rgba(64, 145, 108, 0.10);
+        }
+
+        button {
+            width: 100%;
+            padding: 13px;
+            border: none;
+            border-radius: 8px;
+            background: #2d6a4f;
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1b4332;
+        }
+
+        .retry {
+            display: block;
+            text-align: center;
+            margin-top: 18px;
+            color: #2d6a4f;
+            font-size: 11px;
+            text-decoration: none;
+        }
+
+        .back {
+            display: block;
+            text-align: center;
+            margin-top: 12px;
+            color: #7b8580;
+            font-size: 10px;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="logo">
+        Green<span>Tender</span>
+    </div>
+
+    <div class="icon">
+        🔑
+    </div>
+
+    <h2>Verify OTP</h2>
+
+    <p class="subtitle">
+        Enter the 6-digit OTP sent to your registered email address.
+    </p>
+
+    <div class="email">
+        {{ email }}
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="message {% if category == 'success' %}success{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <form method="POST" action="{{ url_for('verify_forgot_otp') }}">
+
+        <input
+            type="text"
+            name="otp"
+            class="otp"
+            placeholder="000000"
+            maxlength="6"
+            pattern="[0-9]{6}"
+            inputmode="numeric"
+            autocomplete="one-time-code"
+            required
+        >
+
+        <button type="submit">
+            VERIFY OTP & RESET PASSWORD
+        </button>
+
+    </form>
+
+    <a href="{{ url_for('forgot_password') }}" class="retry">
+        Didn't receive the OTP? Try Again
+    </a>
+
+    <a href="{{ url_for('login') }}" class="back">
+        ← Back to Login
+    </a>
+
+</div>
+
+</body>
+</html>

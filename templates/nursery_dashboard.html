@@ -1,0 +1,80 @@
+{% extends 'nursery_base.html' %}
+{% block title %}Nursery Dashboard | GreenTender{% endblock %}
+{% block page_title %}Nursery Dashboard{% endblock %}
+{% block page_subtitle %}Manage your GreenTender participation{% endblock %}
+{% block content %}
+<section class="hero">
+    <small>NURSERY PARTICIPATION PANEL</small>
+    <h2>Welcome, {{ name }}.</h2>
+    <p>Manage your nursery information, monitor available plantation tenders, submit quotations and keep track of your GreenTender activities from one place.</p>
+    <div class="hero-tags">
+        <span class="hero-tag"><i class="bi bi-shield-check"></i> Registered Nursery</span>
+        <span class="hero-tag"><i class="bi bi-file-earmark-text"></i> Tender Participation</span>
+        <span class="hero-tag"><i class="bi bi-graph-up-arrow"></i> Quotation Tracking</span>
+    </div>
+</section>
+
+<div class="stats">
+    <div class="stat"><div class="ico"><i class="bi bi-megaphone"></i></div><span>Available Tenders</span><strong>{{ available_tenders }}</strong><small>Currently open plantation tenders</small></div>
+    <div class="stat"><div class="ico"><i class="bi bi-file-earmark-check"></i></div><span>My Quotations</span><strong>{{ my_quotations }}</strong><small>Quotations submitted by your nursery</small></div>
+    <div class="stat"><div class="ico"><i class="bi bi-box-seam"></i></div><span>My Orders</span><strong>{{ my_orders }}</strong><small>Approved work assigned to your nursery</small></div>
+    <div class="stat"><div class="ico"><i class="bi bi-bell"></i></div><span>Notifications</span><strong>{{ unread_notifications|default(0) }}</strong><small>Unread platform notifications</small></div>
+</div>
+
+<div class="grid2">
+    <section class="card">
+        <div class="inline">
+            <div><h2>Available Plantation Tenders</h2><p class="sub">Open tenders available for your nursery.</p></div>
+            <a class="btn secondary" href="{{ url_for('nursery.tenders') }}">View All</a>
+        </div>
+        <div class="table-wrap">
+            <table class="table">
+                <thead><tr><th>Tender</th><th>Location</th><th>Plant</th><th>Qty</th><th>Budget</th><th>Action</th></tr></thead>
+                <tbody>
+                {% for t in available_tenders_list|default([], true) %}
+                    <tr>
+                        <td><strong>{{ t.title }}</strong><br><span class="sub">{{ t.road_name }}</span></td>
+                        <td>{{ t.location }}</td><td>{{ t.plant_type }}</td><td>{{ t.quantity_required }}</td>
+                        <td>₹{{ '%.0f'|format(t.estimated_budget or 0) }}</td>
+                        <td>{% if t.already_quoted %}<span class="status">Submitted</span>{% else %}<a class="btn" href="{{ url_for('nursery.tender_details',tender_id=t.tender_id) }}">View</a>{% endif %}</td>
+                    </tr>
+                {% else %}<tr><td colspan="6" class="empty">No open tenders are currently available.</td></tr>{% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section class="card">
+        <div class="inline">
+            <div><h2>Quick Actions</h2><p class="sub">Navigate to important areas.</p></div>
+        </div>
+        <div class="info-row"><div class="info-icon"><i class="bi bi-building"></i></div><div><strong>My Nursery</strong><div class="sub">View and update profile</div></div><a class="btn secondary" href="{{ url_for('nursery.profile') }}">Open</a></div>
+        <div class="info-row"><div class="info-icon"><i class="bi bi-search"></i></div><div><strong>Available Tenders</strong><div class="sub">Find suitable opportunities</div></div><a class="btn secondary" href="{{ url_for('nursery.tenders') }}">Open</a></div>
+        <div class="info-row"><div class="info-icon"><i class="bi bi-file-earmark-text"></i></div><div><strong>My Quotations</strong><div class="sub">Track submitted bids</div></div><a class="btn secondary" href="{{ url_for('nursery.my_quotations') }}">Open</a></div>
+        <div class="info-row"><div class="info-icon"><i class="bi bi-box-seam"></i></div><div><strong>My Orders</strong><div class="sub">Track approved work</div></div><a class="btn secondary" href="{{ url_for('nursery.orders') }}">Open</a></div>
+    </section>
+</div>
+
+<div class="grid2">
+    <section class="card">
+        <div class="inline"><div><h2>My Recent Quotations</h2><p class="sub">Track your submitted bids.</p></div><a class="btn secondary" href="{{ url_for('nursery.my_quotations') }}">View All</a></div>
+        <div class="table-wrap">
+            <table class="table">
+                <thead><tr><th>Tender</th><th>Price</th><th>Qty</th><th>Delivery</th><th>Status</th></tr></thead>
+                <tbody>
+                {% for q in quotations|default([], true) %}
+                    <tr><td><strong>{{ q.tender_title }}</strong></td><td>₹{{ '%.0f'|format(q.quoted_price or 0) }}</td><td>{{ q.quantity_available }}</td><td>{{ q.delivery_days }} days</td><td><span class="status {% if q.status=='Pending' %}pending{% elif q.status=='Rejected' %}rejected{% endif %}">{{ q.status }}</span></td></tr>
+                {% else %}<tr><td colspan="5" class="empty">No quotations submitted yet.</td></tr>{% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section class="card">
+        <div class="inline"><div><h2>Notifications</h2><p class="sub">{{ unread_notifications|default(0) }} unread notification(s).</p></div><a class="btn secondary" href="{{ url_for('nursery.notifications') }}">View All</a></div>
+        {% for n in notifications|default([], true) %}
+            <div class="notification"><div class="notification-head"><strong>{{ n.title }}</strong>{% if not n.is_read %}<span class="status pending">Unread</span>{% endif %}</div><p>{{ n.message }}</p><small>{{ n.created_at }}</small></div>
+        {% else %}<div class="activity-empty"><i class="bi bi-bell" style="font-size:25px"></i><br>No notifications yet.</div>{% endfor %}
+    </section>
+</div>
+{% endblock %}

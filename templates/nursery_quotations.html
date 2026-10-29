@@ -1,0 +1,21 @@
+{% extends 'nursery_base.html' %}
+{% block title %}My Quotations | GreenTender{% endblock %}
+{% block page_title %}My Quotations{% endblock %}
+{% block page_subtitle %}Track all quotations submitted by your nursery.{% endblock %}
+{% block content %}
+<section class="card">
+  <div class="inline"><div><h2>Quotation Tracking</h2><p class="sub">Review price, quantity, delivery commitment and decision status.</p></div><span class="status">{{ quotations|length }} Submitted</span></div>
+  <div class="table-wrap" style="margin-top:18px">
+    <table class="table">
+      <thead><tr><th>Tender</th><th>Price</th><th>Qty</th><th>Delivery</th><th>Status</th><th>Action</th></tr></thead>
+      <tbody>
+      {% for q in quotations %}
+        <tr><td><strong>{{ q.tender_title }}</strong><br><span class="sub">{{ q.location }}</span></td><td>₹{{ '%.0f'|format(q.quoted_price or 0) }}</td><td>{{ q.quantity_available }}</td><td>{{ q.delivery_days }} days</td><td><span class="status {% if q.status=='Pending' %}pending{% elif q.status=='Rejected' %}rejected{% endif %}">{{ q.status }}</span></td><td><a class="btn secondary" href="{{ url_for('nursery.quotation_details', quotation_id=q.quotation_id) }}">
+    <i class="bi bi-eye"></i> View
+</a></td></tr>
+      {% else %}<tr><td colspan="6" class="empty">No quotations submitted.</td></tr>{% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

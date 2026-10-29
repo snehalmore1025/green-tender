@@ -1,0 +1,20 @@
+{% extends 'nursery_base.html' %}
+{% block title %}Notifications | GreenTender{% endblock %}
+{% block page_title %}Notifications{% endblock %}
+{% block page_subtitle %}Stay updated about quotations, approvals and delivery changes.{% endblock %}
+{% block content %}
+<section class="card">
+  <div class="inline"><div><h2>Platform Notifications</h2><p class="sub">Important updates related to your GreenTender activity.</p></div><form action="{{ url_for('nursery.mark_all_notifications_read') }}" method="post"><button class="btn secondary" type="submit">
+<i class="bi bi-check2-all"></i> Mark All Read
+</button></form></div>
+  <div style="margin-top:12px">
+  {% for n in notifications %}
+    <div class="notification">
+      <div class="notification-head"><strong>{{ n.title }}</strong>{% if not n.is_read %}<span class="status pending">Unread</span>{% else %}<span class="status">Read</span>{% endif %}</div>
+      <p>{{ n.message }}</p><small>{{ n.created_at }}</small>
+      {% if not n.is_read %}<form action="{{ url_for('nursery.mark_notification_read', notification_id=n.notification_id) }}" method="post" style="margin-top:8px"><button class="btn secondary" type="submit">Mark Read</button></form>{% endif %}
+    </div>
+  {% else %}<div class="empty">No notifications.</div>{% endfor %}
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Bid Ranking | GreenTender</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --green:#1f7a4d;
+            --green-dark:#155b38;
+            --bg:#f5f7f6;
+            --card:#ffffff;
+            --text:#18231d;
+            --muted:#718078;
+            --border:#e4ebe7;
+            --shadow:0 10px 30px rgba(25,60,43,.07);
+        }
+
+        * { box-sizing:border-box; }
+        body {
+            margin:0;
+            background:var(--bg);
+            color:var(--text);
+            font-family:Inter,Arial,sans-serif;
+            padding:32px;
+        }
+
+        .top-bar {
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:16px;
+            margin-bottom:24px;
+            flex-wrap:wrap;
+        }
+
+        .brand {
+            display:flex;
+            align-items:center;
+            gap:10px;
+            font-family:Poppins,sans-serif;
+            font-size:20px;
+            font-weight:700;
+            color:var(--green-dark);
+        }
+
+        .brand i { color:var(--green); }
+
+        .back-link {
+            color:var(--green-dark);
+            font-weight:600;
+            text-decoration:none;
+        }
+        .back-link:hover { text-decoration:underline; }
+
+        .card {
+            background:var(--card);
+            border:1px solid var(--border);
+            border-radius:16px;
+            box-shadow:var(--shadow);
+            padding:24px;
+            margin-bottom:24px;
+        }
+
+        .ai-header {
+            display:flex;
+            align-items:flex-start;
+            justify-content:space-between;
+            gap:16px;
+            flex-wrap:wrap;
+        }
+
+        .ai-header h2 {
+            font-family:Poppins,sans-serif;
+            font-weight:700;
+            margin:0 0 4px;
+        }
+
+        .ai-header p { color:var(--muted); margin:0; }
+
+        .ai-pill {
+            display:inline-flex;
+            align-items:center;
+            gap:8px;
+            background:#eaf7f0;
+            color:var(--green-dark);
+            border:1px solid #cdeadb;
+            border-radius:999px;
+            padding:8px 16px;
+            font-weight:600;
+            font-size:14px;
+        }
+
+        .ai-pill i { color:var(--green); }
+
+        .summary-box {
+            margin-top:16px;
+            background:#f0faf4;
+            border:1px dashed #b7e2c9;
+            border-radius:12px;
+            padding:14px 18px;
+            font-weight:600;
+            color:var(--green-dark);
+        }
+
+        .tender-meta {
+            display:grid;
+            grid-template-columns:repeat(auto-fit, minmax(160px,1fr));
+            gap:14px;
+            margin-top:18px;
+        }
+
+        .tender-meta .item {
+            background:var(--bg);
+            border:1px solid var(--border);
+            border-radius:10px;
+            padding:10px 14px;
+        }
+
+        .tender-meta .item span {
+            display:block;
+            font-size:12px;
+            color:var(--muted);
+            text-transform:uppercase;
+            letter-spacing:.04em;
+            margin-bottom:4px;
+        }
+
+        .tender-meta .item strong { font-size:15px; }
+
+        .rank-card {
+            border:1px solid var(--border);
+            border-radius:14px;
+            padding:20px;
+            margin-bottom:16px;
+            display:flex;
+            gap:20px;
+            align-items:center;
+            flex-wrap:wrap;
+            transition:box-shadow .15s ease;
+        }
+        .rank-card:hover { box-shadow:var(--shadow); }
+
+        .rank-card.top { border-color:#bfe6cf; background:#f6fdf9; }
+
+        .rank-badge {
+            width:52px;
+            height:52px;
+            min-width:52px;
+            border-radius:50%;
+            background:var(--bg);
+            border:2px solid var(--border);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-family:Poppins,sans-serif;
+            font-weight:700;
+            font-size:18px;
+            color:var(--muted);
+        }
+
+        .rank-card.top .rank-badge {
+            background:var(--green);
+            border-color:var(--green);
+            color:#fff;
+        }
+
+        .rank-info { flex:1; min-width:220px; }
+        .rank-info h4 { margin:0 0 4px; font-family:Poppins,sans-serif; }
+        .rank-info .sub { color:var(--muted); font-size:14px; }
+
+        .score-block { text-align:center; min-width:110px; }
+        .score-block .score {
+            font-family:Poppins,sans-serif;
+            font-weight:700;
+            font-size:28px;
+            color:var(--green-dark);
+        }
+        .score-block .label { font-size:12px; color:var(--muted); }
+
+        .recommend-tag {
+            display:inline-block;
+            padding:6px 14px;
+            border-radius:999px;
+            font-size:13px;
+            font-weight:600;
+            white-space:nowrap;
+        }
+        .tag-high { background:#e8f7ee; color:#207548; }
+        .tag-mid { background:#eaf3ff; color:#2058a5; }
+        .tag-low { background:#fff4d9; color:#996c08; }
+        .tag-poor { background:#fdeaea; color:#a53b3b; }
+
+        .breakdown {
+            width:100%;
+            display:grid;
+            grid-template-columns:repeat(auto-fit, minmax(140px,1fr));
+            gap:10px;
+            margin-top:12px;
+            padding-top:12px;
+            border-top:1px dashed var(--border);
+        }
+
+        .breakdown .metric span {
+            display:block;
+            font-size:11px;
+            color:var(--muted);
+            text-transform:uppercase;
+            letter-spacing:.03em;
+        }
+
+        .bar {
+            height:6px;
+            border-radius:4px;
+            background:var(--border);
+            overflow:hidden;
+            margin-top:4px;
+        }
+        .bar-fill { height:100%; background:var(--green); }
+
+        .empty-state {
+            text-align:center;
+            padding:40px 20px;
+            color:var(--muted);
+        }
+
+        .empty-state i { font-size:32px; color:var(--green); display:block; margin-bottom:10px; }
+    </style>
+</head>
+<body>
+
+    <div class="top-bar">
+        <div class="brand"><i class="bi bi-tree-fill"></i> GreenTender</div>
+        <a class="back-link" href="{{ url_for('admin_dashboard') }}#tenders">
+            <i class="bi bi-arrow-left"></i> Back to Dashboard
+        </a>
+    </div>
+
+    <div class="card">
+        <div class="ai-header">
+            <div>
+                <h2>AI Bid Ranking</h2>
+                <p>{{ tender.title }} &middot; {{ tender.location }}</p>
+            </div>
+            <span class="ai-pill"><i class="bi bi-stars"></i> AI-Assisted Evaluation</span>
+        </div>
+
+        <div class="tender-meta">
+            <div class="item"><span>Plant Type</span><strong>{{ tender.plant_type or "—" }}</strong></div>
+            <div class="item"><span>Quantity Required</span><strong>{{ tender.quantity_required or "—" }}</strong></div>
+            <div class="item"><span>Estimated Budget</span><strong>₹{{ "%.2f"|format(tender.estimated_budget or 0) }}</strong></div>
+            <div class="item"><span>Closing Date</span><strong>{{ tender.closing_date or "—" }}</strong></div>
+            <div class="item"><span>Status</span><strong>{{ tender.status }}</strong></div>
+            <div class="item"><span>Total Bids</span><strong>{{ ranked_quotations|length }}</strong></div>
+        </div>
+
+        <div class="summary-box">
+            <i class="bi bi-robot"></i> {{ summary }}
+        </div>
+    </div>
+
+    <div class="card">
+        {% if ranked_quotations %}
+            {% for q in ranked_quotations %}
+                <div class="rank-card {% if loop.first %}top{% endif %}">
+                    <div class="rank-badge">#{{ q.ai_rank }}</div>
+
+                    <div class="rank-info">
+                        <h4>{{ q.nursery_name }}
+                            {% if loop.first %}<i class="bi bi-award-fill" style="color:#e8b93a;" title="Top AI Pick"></i>{% endif %}
+                        </h4>
+                        <div class="sub">
+                            Quotation #QT-{{ q.quotation_id }} &middot;
+                            ₹{{ "%.2f"|format(q.quoted_price or 0) }} &middot;
+                            {{ q.delivery_days }} day(s) delivery &middot;
+                            {{ q.quantity_available }} available
+                        </div>
+                        <div class="sub">Status: {{ q.status }} &middot; Verification: {{ q.verification_status }}</div>
+                    </div>
+
+                    <div class="score-block">
+                        <div class="score">{{ q.ai_score }}</div>
+                        <div class="label">AI Score / 100</div>
+                    </div>
+
+                    <div>
+                        {% set rec = q.ai_recommendation %}
+                        <span class="recommend-tag
+                            {% if rec == 'Highly Recommended' %}tag-high
+                            {% elif rec == 'Recommended' %}tag-mid
+                            {% elif rec == 'Consider with Caution' %}tag-low
+                            {% else %}tag-poor{% endif %}">
+                            {{ rec }}
+                        </span>
+                    </div>
+
+                    <div class="breakdown">
+                        <div class="metric">
+                            <span>Price ({{ q.ai_breakdown.price }})</span>
+                            <div class="bar"><div class="bar-fill" style="width:{{ q.ai_breakdown.price }}%"></div></div>
+                        </div>
+                        <div class="metric">
+                            <span>Delivery ({{ q.ai_breakdown.delivery }})</span>
+                            <div class="bar"><div class="bar-fill" style="width:{{ q.ai_breakdown.delivery }}%"></div></div>
+                        </div>
+                        <div class="metric">
+                            <span>Quantity Match ({{ q.ai_breakdown.quantity }})</span>
+                            <div class="bar"><div class="bar-fill" style="width:{{ q.ai_breakdown.quantity }}%"></div></div>
+                        </div>
+                        <div class="metric">
+                            <span>Nursery Trust ({{ q.ai_breakdown.trust }})</span>
+                            <div class="bar"><div class="bar-fill" style="width:{{ q.ai_breakdown.trust }}%"></div></div>
+                        </div>
+                        <div class="metric">
+                            <span>Description ({{ q.ai_breakdown.description }})</span>
+                            <div class="bar"><div class="bar-fill" style="width:{{ q.ai_breakdown.description }}%"></div></div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty-state">
+                <i class="bi bi-inbox"></i>
+                No quotations have been submitted for this tender yet.
+            </div>
+        {% endif %}
+    </div>
+
+</body>
+</html>

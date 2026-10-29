@@ -1,0 +1,23 @@
+{% extends 'nursery_base.html' %}
+{% block title %}Documents | GreenTender{% endblock %}
+{% block page_title %}Documents{% endblock %}
+{% block page_subtitle %}Upload and manage your nursery verification documents.{% endblock %}
+{% block content %}
+<section class="card">
+  <h2>Upload Document</h2><p class="sub">Accepted formats: PDF, JPG, JPEG, PNG and WEBP.</p>
+  <form method="post" enctype="multipart/form-data" action="{{ url_for('nursery.upload_document') }}" style="margin-top:18px">
+    <div class="form-grid">
+      <div class="field"><label class="label">Document Type</label><select name="document_type" required><option value="">Select document type</option><option>Aadhaar</option><option>Registration Certificate</option><option>Nursery Photo</option></select></div>
+      <div class="field"><label class="label">File</label><input type="file" name="document" accept=".pdf,.jpg,.jpeg,.png,.webp" required></div>
+    </div>
+    <button class="btn" type="submit"><i class="bi bi-upload"></i> Upload Document</button>
+  </form>
+</section>
+<section class="card">
+  <div class="inline"><div><h2>Uploaded Documents</h2><p class="sub">Documents linked to your nursery profile.</p></div><span class="status">{{ documents|length }} Files</span></div>
+  <div class="table-wrap" style="margin-top:18px"><table class="table"><thead><tr><th>Type</th><th>File</th><th>Date</th><th>Action</th></tr></thead><tbody>
+  {% for d in documents %}<tr><td><strong>{{ d.document_type }}</strong></td><td><a class="btn secondary" href="{{ d.file_path or d.file_url }}" target="_blank"><i class="bi bi-eye"></i> View</a></td><td>{{ d.uploaded_at }}</td><td><form action="{{ url_for('nursery.delete_document',document_id=d.document_id) }}" method="post"><button class="btn danger" type="submit"><i class="bi bi-trash"></i> Delete</button></form></td></tr>
+  {% else %}<tr><td colspan="4" class="empty">No documents uploaded.</td></tr>{% endfor %}
+  </tbody></table></div>
+</section>
+{% endblock %}

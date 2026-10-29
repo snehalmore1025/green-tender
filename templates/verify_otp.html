@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Verify OTP | GreenTender</title>
+
+    <!-- Bootstrap -->
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- Google Font -->
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet"
+        href="{{ url_for('static', filename='css/register.css') }}">
+
+</head>
+
+<body>
+
+<div class="container-fluid">
+
+<div class="row min-vh-100">
+
+<!-- LEFT SIDE -->
+
+<div class="col-lg-6 left-side d-none d-lg-flex">
+
+<div class="overlay"></div>
+
+<div class="left-content">
+
+<h1>
+
+<i class="bi bi-envelope-check-fill"></i>
+
+GreenTender
+
+</h1>
+
+<h3>
+
+Email Verification
+
+</h3>
+
+<p>
+
+We have sent a 6-digit One-Time Password (OTP)
+to your registered email address.
+
+Please verify your account to continue.
+
+</p>
+
+<div class="features">
+
+<div>
+
+<i class="bi bi-check-circle-fill"></i>
+
+Secure Email Verification
+
+</div>
+
+<div>
+
+<i class="bi bi-shield-check"></i>
+
+OTP Valid for 5 Minutes
+
+</div>
+
+<div>
+
+<i class="bi bi-lock-fill"></i>
+
+Encrypted Authentication
+
+</div>
+
+<div>
+
+<i class="bi bi-person-check-fill"></i>
+
+Complete Registration
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- RIGHT SIDE -->
+
+<div class="col-lg-6 d-flex justify-content-center align-items-center">
+
+<div class="register-card">
+
+<div class="text-center mb-4">
+
+<i class="bi bi-patch-check-fill register-icon"></i>
+
+<h2>
+
+Verify OTP
+
+</h2>
+
+<p class="text-muted">
+
+Enter the OTP sent to
+
+<br>
+
+<strong>{{ session.email }}</strong>
+
+</p>
+
+</div>
+
+<!-- Flash Messages -->
+
+{% with messages = get_flashed_messages() %}
+
+{% if messages %}
+
+{% for message in messages %}
+
+<div class="alert alert-warning alert-dismissible fade show">
+
+{{ message }}
+
+<button
+type="button"
+class="btn-close"
+data-bs-dismiss="alert">
+
+</button>
+
+</div>
+
+{% endfor %}
+
+{% endif %}
+
+{% endwith %}
+
+<form action="/verify-otp" method="POST">
+
+<div class="form-floating mb-4">
+
+<input
+type="text"
+class="form-control text-center fw-bold"
+id="otp"
+name="otp"
+maxlength="6"
+placeholder="Enter OTP"
+required>
+
+<label for="otp">
+
+<i class="bi bi-key-fill me-2"></i>
+
+Enter 6-Digit OTP
+
+</label>
+
+</div>
+
+<button
+class="btn btn-success w-100 py-3 mb-3">
+
+<i class="bi bi-check-circle-fill me-2"></i>
+
+Verify OTP
+
+</button>
+
+</form>
+
+<div class="text-center">
+
+<a href="/resend-otp" class="fw-bold">
+
+<i class="bi bi-arrow-repeat"></i>
+
+Resend OTP
+
+</a>
+
+</div>
+
+<hr>
+
+<div class="text-center">
+
+<a href="/register">
+
+<i class="bi bi-arrow-left"></i>
+
+Back to Registration
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+
+const otp=document.getElementById("otp");
+
+otp.addEventListener("input",function(){
+
+this.value=this.value.replace(/[^0-9]/g,'');
+
+});
+
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | GreenTender</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --green:#1f7a4d;
+            --green-dark:#155b38;
+            --bg:#f5f7f6;
+            --card:#ffffff;
+            --text:#18231d;
+            --muted:#718078;
+            --border:#e4ebe7;
+            --shadow:0 10px 30px rgba(25,60,43,.07);
+        }
+
+        * { box-sizing:border-box; }
+        body {
+            margin:0;
+            background:var(--bg);
+            color:var(--text);
+            font-family:Inter,Arial,sans-serif;
+        }
+
+        .app { display:flex; min-height:100vh; }
+
+        .sidebar {
+            width:250px;
+            position:fixed;
+            inset:0 auto 0 0;
+            background:#123d2a;
+            color:#fff;
+            padding:24px 16px;
+            z-index:1000;
+            overflow-y:auto;
+        }
+
+        .brand {
+            display:flex;
+            align-items:center;
+            gap:10px;
+            padding:8px 12px 28px;
+            font-family:Poppins,sans-serif;
+            font-size:22px;
+            font-weight:700;
+        }
+
+        .brand i { color:#86d6a9; }
+
+        .admin-mini {
+            display:flex;
+            align-items:center;
+            gap:12px;
+            padding:13px;
+            border:1px solid rgba(255,255,255,.1);
+            background:rgba(255,255,255,.05);
+            border-radius:14px;
+            margin-bottom:22px;
+        }
+
+        .avatar {
+            width:42px;
+            height:42px;
+            border-radius:12px;
+            background:#2a8d5b;
+            display:grid;
+            place-items:center;
+        }
+
+        .admin-mini strong,.admin-mini small {
+            display:block;
+        }
+
+        .admin-mini strong { font-size:13px; }
+        .admin-mini small { color:#b8cfc3; margin-top:3px; }
+
+        .menu {
+            list-style:none;
+            padding:0;
+            margin:0;
+        }
+
+        .menu a {
+            display:flex;
+            align-items:center;
+            gap:12px;
+            color:#c6d8ce;
+            text-decoration:none;
+            padding:12px 13px;
+            border-radius:11px;
+            margin:4px 0;
+            font-size:14px;
+        }
+
+        .menu a:hover,.menu a.active {
+            color:#fff;
+            background:rgba(255,255,255,.11);
+        }
+
+        .menu .logout { margin-top:30px; border-top:1px solid rgba(255,255,255,.1); padding-top:14px; }
+
+        .main {
+            margin-left:250px;
+            width:calc(100% - 250px);
+            padding:28px;
+        }
+
+        .topbar {
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-bottom:22px;
+        }
+
+        h1,h2,h3,h4 { font-family:Poppins,sans-serif; }
+        h1 { font-size:28px; margin:0; }
+        .topbar p { margin:5px 0 0; color:var(--muted); }
+
+        .top-user {
+            display:flex;
+            align-items:center;
+            gap:10px;
+            color:var(--muted);
+        }
+
+        .bell {
+            position:relative;
+            border:1px solid var(--border);
+            background:#fff;
+            width:42px;
+            height:42px;
+            border-radius:12px;
+            display:grid;
+            place-items:center;
+        }
+
+        .bell span {
+            position:absolute;
+            top:-5px;
+            right:-4px;
+            min-width:19px;
+            height:19px;
+            border-radius:20px;
+            background:#e45c5c;
+            color:#fff;
+            font-size:10px;
+            display:grid;
+            place-items:center;
+        }
+
+        .welcome {
+            background:linear-gradient(125deg,#175e3b,#2b8b5a);
+            color:#fff;
+            padding:28px;
+            border-radius:20px;
+            box-shadow:var(--shadow);
+            margin-bottom:22px;
+        }
+
+        .welcome h2 { margin:6px 0 8px; font-size:25px; }
+        .welcome p { color:#d8eee1; max-width:760px; margin-bottom:20px; }
+        .welcome small { letter-spacing:1.5px; font-weight:700; color:#bfe4cc; }
+
+        .btn-main {
+            background:#fff;
+            color:var(--green-dark);
+            border:0;
+            border-radius:10px;
+            padding:10px 16px;
+            font-weight:700;
+        }
+
+        .stats {
+            display:grid;
+            grid-template-columns:repeat(4,1fr);
+            gap:16px;
+            margin-bottom:18px;
+        }
+
+        .stat {
+            background:var(--card);
+            border:1px solid var(--border);
+            border-radius:16px;
+            padding:20px;
+            box-shadow:var(--shadow);
+        }
+
+        .stat .icon {
+            width:42px;
+            height:42px;
+            border-radius:12px;
+            background:#e8f5ed;
+            color:var(--green);
+            display:grid;
+            place-items:center;
+            margin-bottom:13px;
+        }
+
+        .stat span { color:var(--muted); font-size:13px; }
+        .stat strong { display:block; font-size:28px; margin-top:3px; }
+
+        .layout {
+            display:grid;
+            grid-template-columns:1.55fr 1fr;
+            gap:18px;
+            margin-bottom:18px;
+        }
+
+        .card {
+            background:#fff;
+            border:1px solid var(--border);
+            border-radius:17px;
+            box-shadow:var(--shadow);
+            padding:20px;
+            margin-bottom:18px;
+        }
+
+        .card-title {
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-bottom:16px;
+        }
+
+        .card-title h3 { font-size:18px; margin:0; }
+        .card-title p { color:var(--muted); font-size:12px; margin:4px 0 0; }
+
+        .table { margin:0; }
+        .table th {
+            color:#718078;
+            font-size:11px;
+            text-transform:uppercase;
+            letter-spacing:.5px;
+            white-space:nowrap;
+        }
+
+        .table td { vertical-align:middle; font-size:13px; }
+        .table > :not(caption) > * > * { padding:12px 9px; border-color:var(--border); }
+
+        .badge-status {
+            display:inline-block;
+            padding:5px 9px;
+            border-radius:20px;
+            font-size:11px;
+            font-weight:700;
+        }
+
+        .open,.verified,.approved { background:#e8f7ee; color:#207548; }
+        .pending { background:#fff4d9; color:#996c08; }
+        .rejected,.closed { background:#fdeaea; color:#a53b3b; }
+
+        .section-nav {
+            display:flex;
+            flex-wrap:wrap;
+            gap:8px;
+            margin-bottom:18px;
+        }
+
+        .section-nav a {
+            text-decoration:none;
+            color:#416054;
+            background:#fff;
+            border:1px solid var(--border);
+            padding:8px 13px;
+            border-radius:9px;
+            font-size:12px;
+            font-weight:600;
+        }
+
+        .section-nav a:hover { border-color:#9bcab0; color:var(--green); }
+
+        .action-btn {
+            border:1px solid var(--border);
+            background:#fff;
+            color:#365447;
+            border-radius:8px;
+            padding:6px 9px;
+            font-size:11px;
+            font-weight:600;
+        }
+
+        .action-btn:hover { background:#f1f7f3; }
+
+        .form-control,.form-select {
+            border-color:#dfe8e2;
+            border-radius:9px;
+            font-size:13px;
+            padding:10px 12px;
+        }
+
+        .form-label { font-size:12px; font-weight:600; color:#53645b; }
+
+        .btn-green {
+            background:var(--green);
+            color:#fff;
+            border:0;
+            border-radius:9px;
+            padding:9px 15px;
+            font-size:13px;
+            font-weight:700;
+        }
+
+        .btn-green:hover { background:var(--green-dark); color:#fff; }
+
+        .notification {
+            border:1px solid var(--border);
+            border-radius:12px;
+            padding:12px;
+            margin-bottom:9px;
+        }
+
+        .notification.unread { background:#f0f8f3; border-color:#cfe7d8; }
+        .notification strong { font-size:13px; }
+        .notification p { margin:4px 0; color:#697970; font-size:12px; }
+
+        footer {
+            color:#8a968f;
+            font-size:11px;
+            text-align:center;
+            padding:18px;
+        }
+
+        @media(max-width:1000px) {
+            .stats { grid-template-columns:repeat(2,1fr); }
+            .layout { grid-template-columns:1fr; }
+        }
+
+        @media(max-width:760px) {
+            .sidebar { width:70px; padding:20px 8px; }
+            .brand span,.admin-mini div:last-child,.menu span { display:none; }
+            .main { margin-left:70px; width:calc(100% - 70px); padding:15px; }
+            .menu a { justify-content:center; }
+            .stats { grid-template-columns:1fr; }
+            .top-user .name { display:none; }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <aside class="sidebar">
+        <div class="brand">
+            <i class="bi bi-tree-fill"></i>
+            <span>GreenTender</span>
+        </div>
+
+        <div class="admin-mini">
+            <div class="avatar"><i class="bi bi-shield-check"></i></div>
+            <div>
+                <strong>{{ name }}</strong>
+                <small>Administrator</small>
+            </div>
+        </div>
+
+        <ul class="menu">
+            <li><a class="active" href="{{ url_for('admin_dashboard') }}"><i class="bi bi-grid-fill"></i><span>Dashboard</span></a></li>
+            <li><a href="{{ url_for('admin_nurseries_page') }}"><i class="bi bi-building"></i><span>Nurseries</span></a></li>
+            <li><a href="{{ url_for('admin_tenders_page') }}"><i class="bi bi-megaphone"></i><span>Tenders</span></a></li>
+            <li><a href="{{ url_for('admin_quotations_page') }}"><i class="bi bi-file-earmark-text"></i><span>Quotations</span></a></li>
+            <li><a href="{{ url_for('admin_deliveries_page') }}"><i class="bi bi-truck"></i><span>Deliveries</span></a></li>
+            <li><a href="{{ url_for('admin_documents_page') }}"><i class="bi bi-folder"></i><span>Documents</span></a></li>
+            <li><a href="{{ url_for('admin_remarks_page') }}"><i class="bi bi-chat-left-text"></i><span>Remarks</span></a></li>
+            <li><a href="{{ url_for('admin_notifications_page') }}"><i class="bi bi-bell"></i><span>Notifications</span></a></li>
+            <li class="logout"><a href="{{ url_for('logout') }}"><i class="bi bi-box-arrow-right"></i><span>Logout</span></a></li>
+        </ul>
+    </aside>
+
+    <main class="main">
+
+        <header class="topbar" id="dashboard">
+            <div>
+                <h1>Admin Dashboard</h1>
+                <p>Monitor and manage the GreenTender quotation platform.</p>
+            </div>
+
+            <div class="top-user">
+                <button class="bell" onclick="window.location.href='{{ url_for('admin_notifications_page') }}';">
+                    <i class="bi bi-bell"></i>
+                    {% if unread_notifications > 0 %}
+                    <span>{{ unread_notifications }}</span>
+                    {% endif %}
+                </button>
+                <div class="name">
+                    <strong>{{ name }}</strong><br>
+                    <small>Administrator</small>
+                </div>
+            </div>
+        </header>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert {% if category == 'success' %}alert-success{% else %}alert-danger{% endif %} alert-dismissible fade show">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <section class="welcome">
+            <small>ADMINISTRATION PANEL</small>
+            <h2>Welcome back, {{ name }}.</h2>
+            <p>
+                Manage nursery verification, publish plantation tenders,
+                review quotations, add remarks and monitor platform activity.
+            </p>
+            <button class="btn-main" data-bs-toggle="modal" data-bs-target="#createTenderModal">
+                <i class="bi bi-plus-circle"></i> Create New Tender
+            </button>
+        </section>
+
+        <section class="stats">
+            <div class="stat">
+                <div class="icon"><i class="bi bi-people"></i></div>
+                <span>Nursery Users</span>
+                <strong>{{ total_users }}</strong>
+            </div>
+            <div class="stat">
+                <div class="icon"><i class="bi bi-building"></i></div>
+                <span>Registered Nurseries</span>
+                <strong>{{ total_nurseries }}</strong>
+            </div>
+            <div class="stat">
+                <div class="icon"><i class="bi bi-megaphone"></i></div>
+                <span>Active Tenders</span>
+                <strong>{{ active_tenders }}</strong>
+            </div>
+            <div class="stat">
+                <div class="icon"><i class="bi bi-file-earmark-text"></i></div>
+                <span>Total Quotations</span>
+                <strong>{{ total_quotations }}</strong>
+            </div>
+        </section>
+
+        <div class="section-nav">
+            <a href="{{ url_for('admin_nurseries_page') }}">Nursery Verification</a>
+            <a href="{{ url_for('admin_tenders_page') }}">Tender Management</a>
+            <a href="{{ url_for('admin_quotations_page') }}">Quotation Review</a>
+            <a href="{{ url_for('admin_documents_page') }}">Documents</a>
+            <a href="{{ url_for('admin_notifications_page') }}">Notifications</a>
+        </div>
+
+        <section class="layout">
+            <div class="card" id="quotations">
+                <div class="card-title">
+                    <div>
+                        <h3>Quotation Review</h3>
+                        <p>Review submitted quotations and take action.</p>
+                    </div>
+                    <span class="badge-status pending">{{ pending_quotations }} Pending</span>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nursery</th>
+                                <th>Tender</th>
+                                <th>Price</th>
+                                <th><i class="bi bi-stars"></i> AI Score</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for q in quotations %}
+                            <tr>
+                                <td>#QT-{{ q.quotation_id }}</td>
+                                <td>{{ q.nursery_name }}</td>
+                                <td>{{ q.tender_title }}</td>
+                                <td>₹{{ "%.2f"|format(q.quoted_price or 0) }}</td>
+                                <td>
+                                    {% if q.ai_score is not none %}
+                                        <strong>{{ q.ai_score }}</strong>/100
+                                        {% if q.ai_rank == 1 %}<i class="bi bi-award-fill" style="color:#e8b93a;" title="Top AI Pick"></i>{% endif %}
+                                    {% else %}
+                                        <span class="text-muted">—</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <span class="badge-status {{ q.status|lower }}">
+                                        {{ q.status }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <button class="action-btn"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#review{{ q.quotation_id }}">
+                                        Review
+                                    </button>
+                                    <a class="action-btn" href="{{ url_for('ai_tender_ranking', tender_id=q.tender_id) }}">
+                                        AI Rank
+                                    </a>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr><td colspan="7" class="text-center text-muted py-4">No quotations found.</td></tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card" id="notifications">
+                <div class="card-title">
+                    <div>
+                        <h3>Notifications</h3>
+                        <p>Recent system notifications.</p>
+                    </div>
+                    <form method="post" action="{{ url_for('read_all_notifications') }}">
+                        <button class="action-btn" type="submit">Mark all read</button>
+                    </form>
+                </div>
+
+                {% for n in notifications %}
+                    <div class="notification {% if not n.is_read %}unread{% endif %}">
+                        <strong>{{ n.title }}</strong>
+                        <p>{{ n.message }}</p>
+                        <small class="text-muted">{{ n.created_at }}</small>
+                        {% if not n.is_read %}
+                            <form method="post" action="{{ url_for('mark_notification_read', notification_id=n.notification_id) }}" class="mt-2">
+                                <button class="action-btn" type="submit">Mark read</button>
+                            </form>
+                        {% endif %}
+                    </div>
+                {% else %}
+                    <p class="text-muted small">No notifications.</p>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section class="card" id="nurseries">
+            <div class="card-title">
+                <div>
+                    <h3>Nursery Verification</h3>
+                    <p>Review registered nursery profiles.</p>
+                </div>
+                <span class="badge-status pending">{{ pending_nurseries }} Pending</span>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Nursery</th>
+                            <th>Owner</th>
+                            <th>Email</th>
+                            <th>Registration</th>
+                            <th>Location</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for n in nurseries %}
+                        <tr>
+                            <td><strong>{{ n.nursery_name }}</strong></td>
+                            <td>{{ n.owner_name or "-" }}</td>
+                            <td>{{ n.email }}</td>
+                            <td>{{ n.registration_number or "-" }}</td>
+                            <td>{{ n.city or "-" }}, {{ n.state or "-" }}</td>
+                            <td><span class="badge-status {{ n.verification_status|lower }}">{{ n.verification_status }}</span></td>
+                            <td>
+                                {% if n.verification_status != "Verified" %}
+                                <form method="post" action="{{ url_for('verify_nursery', nursery_id=n.nursery_id) }}" style="display:inline">
+                                    <button class="btn-green" type="submit">Verify</button>
+                                </form>
+                                {% endif %}
+                                {% if n.verification_status != "Rejected" %}
+                                <form method="post" action="{{ url_for('reject_nursery', nursery_id=n.nursery_id) }}" style="display:inline">
+                                    <button class="action-btn" type="submit">Reject</button>
+                                </form>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr><td colspan="7" class="text-center text-muted py-4">No nursery profiles found.</td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="card" id="tenders">
+            <div class="card-title">
+                <div>
+                    <h3>Tender Management</h3>
+                    <p>Create, monitor and close plantation tenders.</p>
+                </div>
+                <button class="btn-green" data-bs-toggle="modal" data-bs-target="#createTenderModal">
+                    <i class="bi bi-plus-lg"></i> Create Tender
+                </button>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Location</th>
+                            <th>Plant</th>
+                            <th>Quantity</th>
+                            <th>Budget</th>
+                            <th>Closing</th>
+                            <th>Quotations</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for t in tenders %}
+                        <tr>
+                            <td><strong>{{ t.title }}</strong></td>
+                            <td>{{ t.location }}</td>
+                            <td>{{ t.plant_type }}</td>
+                            <td>{{ t.quantity_required }}</td>
+                            <td>₹{{ "%.2f"|format(t.estimated_budget or 0) }}</td>
+                            <td>{{ t.closing_date }}</td>
+                            <td>{{ t.quotation_count }}</td>
+                            <td><span class="badge-status {{ t.status|lower }}">{{ t.status }}</span></td>
+                            <td>
+                                <a class="action-btn" href="{{ url_for('ai_tender_ranking', tender_id=t.tender_id) }}" title="AI-rank all bids for this tender">
+                                    <i class="bi bi-stars"></i> AI Rank Bids
+                                </a>
+                                {% if t.status == "Open" %}
+                                <form method="post" action="{{ url_for('close_tender', tender_id=t.tender_id) }}" style="display:inline">
+                                    <button class="action-btn" type="submit">Close</button>
+                                </form>
+                                {% endif %}
+                                <form method="post" action="{{ url_for('delete_tender', tender_id=t.tender_id) }}" style="display:inline" onsubmit="return confirm('Delete this tender?');">
+                                    <button class="action-btn" type="submit">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr><td colspan="9" class="text-center text-muted py-4">No tenders found.</td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="layout">
+            <div class="card" id="documents">
+                <div class="card-title">
+                    <div>
+                        <h3>Uploaded Documents</h3>
+                        <p>Documents submitted by nursery owners.</p>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Nursery</th>
+                                <th>Type</th>
+                                <th>Uploaded</th>
+                                <th>File</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for d in documents %}
+                            <tr>
+                                <td>{{ d.nursery_name }}</td>
+                                <td>{{ d.document_type }}</td>
+                                <td>{{ d.uploaded_at }}</td>
+                                <td>
+                                    {% if d.file_url %}
+                                    <a href="{{ d.file_url }}" target="_blank" class="action-btn">View</a>
+                                    {% else %}-{% endif %}
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr><td colspan="4" class="text-center text-muted py-4">No documents found.</td></tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card" id="remarks">
+                <div class="card-title">
+                    <div>
+                        <h3>Quotation Remarks</h3>
+                        <p>Latest remarks added during quotation review.</p>
+                    </div>
+                </div>
+
+                {% for r in remarks %}
+                    <div class="notification">
+                        <strong>#QT-{{ r.quotation_id }} — {{ r.nursery_name }}</strong>
+                        <p>{{ r.remark }}</p>
+                        <small class="text-muted">{{ r.remarked_at }}</small>
+                    </div>
+                {% else %}
+                    <p class="text-muted small">No remarks available.</p>
+                {% endfor %}
+            </div>
+        </section>
+
+        <footer>© 2026 GreenTender. All Rights Reserved.</footer>
+    </main>
+</div>
+
+
+<!-- CREATE TENDER MODAL -->
+<div class="modal fade" id="createTenderModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content border-0">
+            <form method="post" action="{{ url_for('create_tender') }}">
+                <div class="modal-header">
+                    <h5 class="modal-title">Create New Tender</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-md-8">
+                            <label class="form-label">Tender Title</label>
+                            <input class="form-control" name="title" required>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label">Plant Type</label>
+                            <input class="form-control" name="plant_type" required>
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label">Description</label>
+                            <textarea class="form-control" name="description" rows="3" required></textarea>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Location</label>
+                            <input class="form-control" name="location" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Road Name</label>
+                            <input class="form-control" name="road_name" required>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label">Quantity Required</label>
+                            <input type="number" min="1" class="form-control" name="quantity_required" required>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label">Estimated Budget (₹)</label>
+                            <input type="number" min="1" step="0.01" class="form-control" name="estimated_budget" required>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label">Publish Date</label>
+                            <input type="date" class="form-control" name="publish_date" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Closing Date</label>
+                            <input type="date" class="form-control" name="closing_date" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="action-btn" data-bs-dismiss="modal">Cancel</button>
+                    <button class="btn-green" type="submit">Publish Tender</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!-- QUOTATION REVIEW MODALS -->
+{% for q in quotations %}
+<div class="modal fade" id="review{{ q.quotation_id }}" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content border-0">
+            <div class="modal-header">
+                <h5 class="modal-title">Review Quotation #QT-{{ q.quotation_id }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <strong>Nursery</strong>
+                        <div>{{ q.nursery_name }}</div>
+                    </div>
+                    <div class="col-md-6">
+                        <strong>Tender</strong>
+                        <div>{{ q.tender_title }}</div>
+                    </div>
+                    <div class="col-md-4">
+                        <strong>Quoted Price</strong>
+                        <div>₹{{ "%.2f"|format(q.quoted_price or 0) }}</div>
+                    </div>
+                    <div class="col-md-4">
+                        <strong>Quantity</strong>
+                        <div>{{ q.quantity_available }}</div>
+                    </div>
+                    <div class="col-md-4">
+                        <strong>Delivery</strong>
+                        <div>{{ q.delivery_days }} days</div>
+                    </div>
+                    <div class="col-12">
+                        <strong>Description</strong>
+                        <div class="text-muted">{{ q.quotation_description or "No description provided." }}</div>
+                    </div>
+                    {% if q.plant_photo %}
+                    <div class="col-12">
+                        <a href="{{ q.plant_photo }}" target="_blank" class="action-btn">View Plant Photo</a>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <hr>
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <form method="post" action="{{ url_for('approve_quotation', quotation_id=q.quotation_id) }}">
+                            <label class="form-label">Approval Remark (optional)</label>
+                            <textarea class="form-control mb-2" name="remark" rows="3"></textarea>
+                            <button class="btn-green w-100" type="submit">
+                                <i class="bi bi-check-circle"></i> Approve Quotation
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="col-md-6">
+                        <form method="post" action="{{ url_for('reject_quotation', quotation_id=q.quotation_id) }}">
+                            <label class="form-label">Rejection Remark (required)</label>
+                            <textarea class="form-control mb-2" name="remark" rows="3" required></textarea>
+                            <button class="btn btn-danger w-100" type="submit">
+                                <i class="bi bi-x-circle"></i> Reject Quotation
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

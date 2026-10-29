@@ -1,0 +1,24 @@
+{% extends 'nursery_base.html' %}
+{% block title %}My Nursery | GreenTender{% endblock %}
+{% block page_title %}My Nursery{% endblock %}
+{% block page_subtitle %}Manage your nursery profile and verification information.{% endblock %}
+{% block content %}
+<section class="card">
+  <div class="inline">
+    <div><h2>Nursery Profile</h2><p class="sub">Keep your registration information accurate for tender participation.</p></div>
+    <span class="status {% if nursery.verification_status=='Pending' %}pending{% elif nursery.verification_status=='Rejected' %}rejected{% endif %}">{{ nursery.verification_status }}</span>
+  </div>
+  <form method="post" style="margin-top:20px">
+    <div class="form-grid">
+      <div class="field"><label class="label">Nursery Name</label><input name="nursery_name" value="{{ nursery.nursery_name or '' }}" required></div>
+      <div class="field"><label class="label">Owner Name</label><input name="owner_name" value="{{ nursery.owner_name or '' }}" required></div>
+      <div class="field"><label class="label">Registration Number</label><input name="registration_number" value="{{ nursery.registration_number or '' }}"></div>
+      <div class="field"><label class="label">City</label><input name="city" value="{{ nursery.city or '' }}"></div>
+      <div class="field"><label class="label">State</label><input name="state" value="{{ nursery.state or '' }}"></div>
+      <div class="field"><label class="label">Pincode</label><input name="pincode" value="{{ nursery.pincode or '' }}"></div>
+    </div>
+    <div class="field"><label class="label">Address</label><textarea name="address">{{ nursery.address or '' }}</textarea></div>
+    <button class="btn" type="submit"><i class="bi bi-save"></i> Save Profile</button>
+  </form>
+</section>
+{% endblock %}

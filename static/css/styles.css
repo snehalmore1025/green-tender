@@ -1,0 +1,436 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
+
+/*oowp gqtu bcmc uenp*/
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    overflow-x:hidden;
+    background:#f8f9fa;
+}
+
+.navbar{
+    padding:18px 0;
+    background:rgba(0,0,0,.25);
+    backdrop-filter:blur(14px);
+    transition:.4s;
+}
+
+.navbar-brand{
+    color:#fff !important;
+    font-size:2rem;
+    font-weight:700;
+}
+
+.nav-link{
+    color:white !important;
+    margin-left:18px;
+    font-weight:500;
+    transition:.3s;
+}
+
+.nav-link:hover{
+    color:#8BC34A !important;
+}
+
+.hero{
+
+    height:100vh;
+    background:
+    linear-gradient(
+    rgba(5,40,15,.65),
+    rgba(5,40,15,.65)),
+    url("../images/bg.jpg");
+    background-size:cover;
+    background-position:center;
+    background-repeat:no-repeat;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:white;
+    text-align:center;
+    position:relative;
+}
+
+.hero-content{
+
+    max-width:850px;
+    animation:fadeUp 1.2s ease;
+
+}
+.hero h1{
+
+    font-size:4.5rem;
+    font-weight:800;
+    margin-bottom:20px;
+    text-shadow:2px 2px 12px rgba(0,0,0,.4);
+}
+
+.hero h2{
+    font-size:2rem;
+    font-weight:500;
+    margin-bottom:25px;
+}
+
+.hero p{
+
+    font-size:1.15rem;
+    line-height:1.8;
+    color:#ececec;
+
+    margin-bottom:40px;
+
+}
+
+
+.btn-success{
+
+    background:#2E7D32;
+
+    border:none;
+
+    padding:14px 35px;
+
+    border-radius:50px;
+
+    font-weight:600;
+
+    transition:.35s;
+
+    box-shadow:0 8px 25px rgba(46,125,50,.35);
+
+}
+
+.btn-success:hover{
+
+    background:#1B5E20;
+
+    transform:translateY(-4px);
+
+}
+
+.btn-outline-light{
+
+    padding:14px 35px;
+
+    border-radius:50px;
+
+    font-weight:600;
+
+}
+
+.btn-outline-light:hover{
+
+    transform:translateY(-4px);
+
+}
+
+/* ==========================
+   SECTION
+========================== */
+
+section{
+
+    padding:90px 0;
+
+}
+
+/* ==========================
+   HEADINGS
+========================== */
+
+.section-title{
+
+    text-align:center;
+
+    margin-bottom:60px;
+
+}
+
+.section-title h2{
+
+    font-size:2.5rem;
+
+    font-weight:700;
+
+    color:#1B5E20;
+
+}
+
+.section-title p{
+
+    color:#777;
+
+    margin-top:15px;
+
+}
+
+/* ==========================
+   FEATURE CARDS
+========================== */
+
+.card{
+
+    border:none;
+
+    border-radius:20px;
+
+    transition:.4s;
+
+    box-shadow:0 15px 35px rgba(0,0,0,.08);
+
+    overflow:hidden;
+
+}
+
+.card:hover{
+
+    transform:translateY(-12px);
+
+    box-shadow:0 20px 45px rgba(0,0,0,.15);
+
+}
+
+.card-body{
+
+    padding:40px 30px;
+
+}
+
+.card i{
+
+    font-size:3rem;
+
+    color:#2E7D32;
+
+    margin-bottom:20px;
+
+}
+
+.card h4{
+
+    font-weight:700;
+
+    margin-bottom:15px;
+
+}
+
+.card p{
+
+    color:#666;
+
+}
+
+/* ==========================
+   ABOUT
+========================== */
+
+.about-img{
+
+    border-radius:25px;
+
+    overflow:hidden;
+
+    box-shadow:0 20px 45px rgba(0,0,0,.15);
+
+}
+
+.about-img img{
+
+    width:100%;
+
+    transition:.5s;
+
+}
+
+.about-img:hover img{
+
+    transform:scale(1.05);
+
+}
+
+/* ==========================
+   TIMELINE
+========================== */
+
+.step{
+
+    text-align:center;
+
+}
+
+.circle{
+
+    width:75px;
+
+    height:75px;
+
+    background:#2E7D32;
+
+    color:white;
+
+    border-radius:50%;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    margin:auto;
+
+    font-size:1.5rem;
+
+    font-weight:700;
+
+    margin-bottom:20px;
+
+    box-shadow:0 10px 25px rgba(46,125,50,.4);
+
+}
+
+/* ==========================
+   CTA
+========================== */
+
+.cta{
+
+    background:linear-gradient(135deg,#2E7D32,#43A047);
+
+    color:white;
+
+    border-radius:25px;
+
+    padding:70px;
+
+    text-align:center;
+
+}
+
+.cta h2{
+
+    font-size:2.5rem;
+
+    font-weight:700;
+
+}
+
+.cta p{
+
+    margin:20px 0 35px;
+
+    font-size:1.1rem;
+
+}
+
+/* ==========================
+   FOOTER
+========================== */
+
+footer{
+
+    background:#111;
+
+    color:#ddd;
+
+    padding:35px 0;
+
+    text-align:center;
+
+}
+
+/* ==========================
+   ANIMATIONS
+========================== */
+
+@keyframes fadeUp{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(40px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+}
+
+/* ==========================
+   RESPONSIVE
+========================== */
+
+@media(max-width:992px){
+
+.hero h1{
+
+font-size:3.2rem;
+
+}
+
+.hero h2{
+
+font-size:1.5rem;
+
+}
+
+.hero p{
+
+font-size:1rem;
+
+}
+
+}
+
+@media(max-width:768px){
+
+.hero{
+
+padding:20px;
+
+}
+
+.hero h1{
+
+font-size:2.6rem;
+
+}
+
+.hero h2{
+
+font-size:1.2rem;
+
+}
+
+.btn{
+
+width:100%;
+
+margin-bottom:15px;
+
+}
+
+.card{
+
+margin-bottom:25px;
+
+}
+
+}

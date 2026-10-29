@@ -1,0 +1,23 @@
+{% extends 'nursery_base.html' %}
+{% block title %}Tender Details | GreenTender{% endblock %}
+{% block page_title %}Tender Details{% endblock %}
+{% block page_subtitle %}Review the tender requirements before submitting your quotation.{% endblock %}
+{% block content %}
+<section class="card">
+  <div class="inline"><div><h2>{{ tender.title }}</h2><p class="sub">{{ tender.description }}</p></div><span class="status {% if tender.status!='Open' %}rejected{% endif %}">{{ tender.status }}</span></div>
+  <div class="grid3" style="margin-top:20px">
+    <div><div class="detail-label">Location</div><div class="detail-value">{{ tender.location }}</div></div>
+    <div><div class="detail-label">Road</div><div class="detail-value">{{ tender.road_name }}</div></div>
+    <div><div class="detail-label">Plant</div><div class="detail-value">{{ tender.plant_type }}</div></div>
+    <div><div class="detail-label">Quantity Required</div><div class="detail-value">{{ tender.quantity_required }}</div></div>
+    <div><div class="detail-label">Estimated Budget</div><div class="detail-value">₹{{ '%.0f'|format(tender.estimated_budget or 0) }}</div></div>
+    <div><div class="detail-label">Closing Date</div><div class="detail-value">{{ tender.closing_date }}</div></div>
+  </div>
+  <div class="actions" style="margin-top:22px">
+    {% if already_quoted %}<span class="status">Quotation Already Submitted</span>
+    {% elif nursery.verification_status!='Verified' %}<span class="status pending">Verification Required Before Bidding</span>
+    {% elif tender.status!='Open' %}<span class="status rejected">Tender Closed</span>
+    {% else %}<a class="btn" href="{{ url_for('nursery.submit_quotation',tender_id=tender.tender_id) }}"><i class="bi bi-send"></i> Submit Quotation</a>{% endif %}
+  </div>
+</section>
+{% endblock %}

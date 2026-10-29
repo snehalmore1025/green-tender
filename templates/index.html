@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GreenTender</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --forest:#12382a; --forest-2:#0d2a20; --brand:#237a46; --brand-d:#1b5e37;
+            --pale:#e6f3ea; --bg:#f6f9f7; --ink:#14231b; --muted:#5b6b62; --line:#dde8e1;
+            --amber-bg:#fdf1cf; --amber:#8a6a00;
+        }
+        html { scroll-behavior:smooth; scroll-padding-top:90px; }
+        body { font-family:'Poppins',system-ui,sans-serif; color:var(--ink); background:var(--bg); line-height:1.65; }
+        h1,h2,h3,h4,h5 { font-weight:600; letter-spacing:-.01em; color:var(--ink); }
+        a:focus-visible,.btn:focus-visible,button:focus-visible { outline:3px solid #8fd3a8; outline-offset:3px; }
+
+        /* Navbar */
+        .gt-nav { background:rgba(13,42,32,.96); padding:.8rem 0; box-shadow:0 6px 24px -12px rgba(0,0,0,.5); }
+        .gt-brand { display:flex; align-items:center; gap:.5rem; color:#fff; font-weight:700; font-size:1.55rem; text-decoration:none; }
+        .gt-brand svg { color:#7ee2a2; }
+        .gt-nav .nav-link { color:#e8f3ec; font-weight:500; padding:.5rem 1rem; }
+        .gt-nav .nav-link:hover { color:#7ee2a2; }
+        .btn-pill { border-radius:999px; font-weight:600; padding:.55rem 1.5rem; }
+        .btn-brand { background:var(--brand); color:#fff; border:2px solid var(--brand); }
+        .btn-brand:hover { background:var(--brand-d); border-color:var(--brand-d); color:#fff; }
+        .btn-line { background:transparent; color:#fff; border:2px solid #fff; }
+        .btn-line:hover { background:#fff; color:var(--forest); }
+        .btn-lg.btn-pill { padding:.8rem 2rem; }
+
+        /* Hero */
+        .hero { position:relative; padding:9.5rem 0 6rem; color:#fff; background-size:cover; background-position:center; overflow:hidden; }
+        .hero::before { content:""; position:absolute; inset:0;
+            background:linear-gradient(100deg,rgba(8,40,24,.93) 0%,rgba(14,64,38,.82) 55%,rgba(14,64,38,.68) 100%); }
+        .hero .container { position:relative; }
+        .hero h1 { color:#fff; font-size:clamp(2.3rem,4.6vw,3.7rem); line-height:1.12; margin-bottom:1.3rem; }
+        .hero .lead { color:#d9ece0; font-weight:300; font-size:1.12rem; max-width:33rem; margin-bottom:2rem; }
+
+        .road-frame { max-width:400px; margin-left:auto; border-radius:26px; overflow:hidden; background:#26292b;
+            border:1px solid rgba(255,255,255,.25); box-shadow:0 34px 60px -28px rgba(0,0,0,.7); aspect-ratio:4/5; }
+        .road-frame svg { display:block; width:100%; height:100%; }
+        .dashes { animation:drive 3s linear infinite; }
+        @keyframes drive { to { transform:translateY(86px); } }
+
+        /* Sections */
+        .section { padding:5.5rem 0; }
+        .kicker { display:inline-block; font-size:.8rem; font-weight:600; color:var(--brand-d); background:var(--pale); border-radius:999px; padding:.25rem .9rem; margin-bottom:1rem; }
+        .section-title { font-size:clamp(1.8rem,3.2vw,2.5rem); margin-bottom:1rem; }
+        .section-intro { color:var(--muted); max-width:38rem; }
+        .card-g { background:#fff; border:1px solid var(--line); border-radius:20px; padding:1.6rem; box-shadow:0 14px 34px -26px rgba(18,56,42,.5); height:100%; }
+        .step-ic { width:48px; height:48px; border-radius:14px; background:var(--pale); color:var(--brand); display:grid; place-items:center; font-size:1.3rem; margin-bottom:1rem; }
+        .card-g h5 { font-size:1.05rem; margin:0 0 .35rem; }
+        .card-g p { color:var(--muted); font-size:.9rem; margin:0; }
+
+        /* AI ranking demo */
+        .modes { display:flex; flex-wrap:wrap; gap:.5rem; margin-bottom:1.2rem; }
+        .mode { border:1px solid var(--line); background:var(--bg); color:var(--ink); border-radius:999px; padding:.4rem 1.1rem; font-weight:500; font-size:.88rem; }
+        .mode[aria-pressed="true"] { background:var(--brand); border-color:var(--brand); color:#fff; }
+        .rank-row { display:grid; grid-template-columns:2.2rem 1fr auto; gap:1rem; align-items:center; padding:.9rem 0; border-top:1px solid var(--line); }
+        .rank-row:first-child { border-top:0; }
+        .rank-no { width:2.2rem; height:2.2rem; border-radius:50%; background:var(--pale); color:var(--brand-d); display:grid; place-items:center; font-weight:600; }
+        .rank-row.top .rank-no { background:var(--brand); color:#fff; }
+        .rank-head { display:flex; justify-content:space-between; flex-wrap:wrap; gap:.3rem; font-weight:500; font-size:.95rem; margin-bottom:.35rem; }
+        .rank-head small { color:var(--muted); font-weight:400; }
+        .bar { height:7px; border-radius:7px; background:var(--pale); overflow:hidden; }
+        .bar span { display:block; height:100%; width:var(--w); background:var(--brand); border-radius:7px; transition:width .6s cubic-bezier(.2,.7,.2,1); }
+        .chip { display:inline-block; border-radius:999px; padding:.15rem .7rem; font-size:.74rem; font-weight:600; background:var(--pale); color:var(--brand-d); }
+        .chip.wait { background:var(--amber-bg); color:var(--amber); }
+        .note { font-size:.8rem; color:var(--muted); margin:1rem 0 0; }
+        .factor-list { list-style:none; padding:0; margin:1.2rem 0 0; }
+        .factor-list li { display:flex; gap:.7rem; padding:.4rem 0; color:var(--muted); }
+        .factor-list i { color:var(--brand); }
+
+        .cta { background:linear-gradient(120deg,var(--brand-d),var(--brand)); border-radius:26px; padding:3.5rem 2rem; text-align:center; color:#fff; }
+        .cta h2 { color:#fff; }
+        .cta p { color:#dff1e6; max-width:32rem; margin:0 auto 1.8rem; }
+        .cta .btn-light { color:var(--brand-d); }
+        footer { background:var(--forest-2); color:#b6d7c1; text-align:center; padding:1.6rem 0; margin-top:5rem; font-size:.92rem; }
+
+        @media (max-width:991px) { .hero { padding-top:8rem; } .road-frame { margin:3rem auto 0; } }
+        @media (max-width:575px) { .rank-row { grid-template-columns:2.2rem 1fr; } .rank-row .chip { display:none; } .road-frame { aspect-ratio:16/10; } }
+        @media (prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } .dashes { animation:none; } .bar span { transition:none; } }
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top gt-nav">
+    <div class="container">
+        <a class="gt-brand" href="#home">
+            <!-- inline tree logo: always renders, no icon font needed -->
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2 6 10h3l-4 6h5v5h4v-5h5l-4-6h3z"/></svg>
+            GreenTender
+        </a>
+        <button class="navbar-toggler border-0" data-bs-toggle="collapse" data-bs-target="#menu" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse" id="menu">
+            <ul class="navbar-nav mx-auto">
+                <li class="nav-item"><a class="nav-link" href="#home">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="#how">How it works</a></li>
+                <li class="nav-item"><a class="nav-link" href="#ranking">AI ranking</a></li>
+            </ul>
+            <div class="d-flex gap-2 mt-3 mt-lg-0">
+                <a href="/login" class="btn btn-pill btn-line">Login</a>
+                <a href="/register" class="btn btn-pill btn-brand">Register</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- HERO -->
+<section id="home" class="hero" style="background-image: url(&quot;{{ url_for('static', filename='images/bg.jpg') }}&quot;);">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-7">
+                <h1>Greener roads begin with a fairer bid.</h1>
+                <p class="lead">
+                    GreenTender takes a road divider plantation tender from publication to delivery.
+                    Nurseries quote online, AI helps compare every bid, and approved work is tracked
+                    until the plants arrive.
+                </p>
+                <a href="/register" class="btn btn-pill btn-brand btn-lg me-2">Get Started</a>
+                <a href="/login" class="btn btn-pill btn-line btn-lg">Login</a>
+            </div>
+
+            <div class="col-lg-5">
+                <div class="road-frame" role="img" aria-label="Top view of a road with a planted divider">
+                    <svg viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="400" height="500" fill="#26292b"/>
+                        <rect x="14" width="3" height="500" fill="#e8e8e0" opacity=".75"/>
+                        <rect x="383" width="3" height="500" fill="#e8e8e0" opacity=".75"/>
+                        <g class="dashes" fill="#e2a82e">
+                            <rect x="76" y="-152" width="5" height="46" rx="2"/><rect x="76" y="-66" width="5" height="46" rx="2"/>
+                            <rect x="76" y="20" width="5" height="46" rx="2"/><rect x="76" y="106" width="5" height="46" rx="2"/>
+                            <rect x="76" y="192" width="5" height="46" rx="2"/><rect x="76" y="278" width="5" height="46" rx="2"/>
+                            <rect x="76" y="364" width="5" height="46" rx="2"/><rect x="76" y="450" width="5" height="46" rx="2"/>
+                            <rect x="319" y="-152" width="5" height="46" rx="2"/><rect x="319" y="-66" width="5" height="46" rx="2"/>
+                            <rect x="319" y="20" width="5" height="46" rx="2"/><rect x="319" y="106" width="5" height="46" rx="2"/>
+                            <rect x="319" y="192" width="5" height="46" rx="2"/><rect x="319" y="278" width="5" height="46" rx="2"/>
+                            <rect x="319" y="364" width="5" height="46" rx="2"/><rect x="319" y="450" width="5" height="46" rx="2"/>
+                        </g>
+                        <rect x="140" width="120" height="500" fill="#c9cdc4"/>
+                        <rect x="148" width="104" height="500" fill="#2f5a3d"/>
+                        <circle cx="180" cy="48" r="20" fill="#3f7a52"/><circle cx="222" cy="48" r="14" fill="#6fa77a"/>
+                        <circle cx="200" cy="130" r="26" fill="#2a6a41"/><circle cx="200" cy="130" r="14" fill="#4c9462"/>
+                        <circle cx="176" cy="212" r="15" fill="#6fa77a"/><circle cx="220" cy="212" r="21" fill="#3f7a52"/>
+                        <circle cx="200" cy="294" r="26" fill="#2a6a41"/><circle cx="200" cy="294" r="14" fill="#4c9462"/>
+                        <circle cx="180" cy="376" r="20" fill="#3f7a52"/><circle cx="222" cy="376" r="14" fill="#6fa77a"/>
+                        <circle cx="200" cy="458" r="26" fill="#2a6a41"/><circle cx="200" cy="458" r="14" fill="#4c9462"/>
+                        <circle cx="168" cy="96" r="4" fill="#e2a82e"/><circle cx="232" cy="170" r="4" fill="#e2a82e"/>
+                        <circle cx="166" cy="252" r="4" fill="#e2a82e"/><circle cx="234" cy="336" r="4" fill="#e2a82e"/>
+                        <circle cx="168" cy="420" r="4" fill="#e2a82e"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how" class="section">
+    <div class="container">
+        <span class="kicker">How it works</span>
+        <h2 class="section-title">From tender to delivery, in five steps</h2>
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-5 g-4 mt-1">
+            <div class="col"><div class="card-g"><div class="step-ic"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16"><path d="M11 1a1 1 0 0 1 1 1v.5h.5A1.5 1.5 0 0 1 14 4v9a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 13V4a1.5 1.5 0 0 1 1.5-1.5H4V2a1 1 0 0 1 1-1h6zM4.5 3.5H3.5A.5.5 0 0 0 3 4v9a.5.5 0 0 0 .5.5h9A.5.5 0 0 0 13 13V4a.5.5 0 0 0-.5-.5h-1v.5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-.5zM5 2v1.5h6V2H5z"/><path d="M5 7.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5A.5.5 0 0 1 5 9.5zm0 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z"/></svg></div><h5>Publish</h5><p>The administrator posts a plantation tender.</p></div></div>
+            <div class="col"><div class="card-g"><div class="step-ic"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16"><path d="M5.5 7a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zM5 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z"/><path d="M9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.5L9.5 0zm0 1v2A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5z"/></svg></div><h5>Quote</h5><p>Verified nurseries submit their quotations.</p></div></div>
+            <div class="col"><div class="card-g"><div class="step-ic"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16"><path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/></svg></div><h5>Rank</h5><p>AI scores every bid for easy comparison.</p></div></div>
+            <div class="col"><div class="card-g"><div class="step-ic"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16"><path d="M10.067.87a2.89 2.89 0 0 0-4.134 0l-.622.638-.89-.011a2.89 2.89 0 0 0-2.924 2.924l.01.89-.636.622a2.89 2.89 0 0 0 0 4.134l.637.622-.011.89a2.89 2.89 0 0 0 2.924 2.924l.89-.01.622.636a2.89 2.89 0 0 0 4.134 0l.622-.637.89.011a2.89 2.89 0 0 0 2.924-2.924l-.01-.89.636-.622a2.89 2.89 0 0 0 0-4.134l-.637-.622.011-.89a2.89 2.89 0 0 0-2.924-2.924l-.89.01-.622-.636zm.287 5.984-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7 8.793l2.646-2.647a.5.5 0 0 1 .708.708z"/></svg></div><h5>Approve</h5><p>The administrator approves or rejects, with a remark.</p></div></div>
+            <div class="col"><div class="card-g"><div class="step-ic"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16"><path d="M0 3.5A1.5 1.5 0 0 1 1.5 2h9A1.5 1.5 0 0 1 12 3.5V5h1.02a1.5 1.5 0 0 1 1.17.563l1.481 1.85a1.5 1.5 0 0 1 .329.938V10.5a1.5 1.5 0 0 1-1.5 1.5H14a2 2 0 1 1-4 0H5a2 2 0 1 1-3.998-.085A1.5 1.5 0 0 1 0 10.5v-7zm1.294 7.456A2 2 0 0 1 4.732 11h5.536a2 2 0 0 1 .732-.732V3.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5v7a.5.5 0 0 0 .294.456zM12 10a2 2 0 0 1 1.732 1h.768a.5.5 0 0 0 .5-.5V8.35a.5.5 0 0 0-.11-.312l-1.48-1.85A.5.5 0 0 0 13.02 6H12v4zm-9 1a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm9 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/></svg></div><h5>Deliver</h5><p>Delivery is tracked from pending to delivered.</p></div></div>
+        </div>
+    </div>
+</section>
+
+<!-- AI RANKING DEMO -->
+<section id="ranking" class="section pt-0">
+    <div class="container">
+        <div class="row g-5 align-items-start">
+            <div class="col-lg-5">
+                <span class="kicker">AI ranking</span>
+                <h2 class="section-title">See how the best bid is chosen</h2>
+                <p class="section-intro">Change the priority and watch the ranking shift. The administrator always makes the final decision.</p>
+                <ul class="factor-list">
+                    <li><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="flex:none;margin-top:2px"><path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/><path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/></svg>Price</li>
+                    <li><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="flex:none;margin-top:2px"><path d="M0 3.5A1.5 1.5 0 0 1 1.5 2h9A1.5 1.5 0 0 1 12 3.5V5h1.02a1.5 1.5 0 0 1 1.17.563l1.481 1.85a1.5 1.5 0 0 1 .329.938V10.5a1.5 1.5 0 0 1-1.5 1.5H14a2 2 0 1 1-4 0H5a2 2 0 1 1-3.998-.085A1.5 1.5 0 0 1 0 10.5v-7zm1.294 7.456A2 2 0 0 1 4.732 11h5.536a2 2 0 0 1 .732-.732V3.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5v7a.5.5 0 0 0 .294.456zM12 10a2 2 0 0 1 1.732 1h.768a.5.5 0 0 0 .5-.5V8.35a.5.5 0 0 0-.11-.312l-1.48-1.85A.5.5 0 0 0 13.02 6H12v4zm-9 1a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm9 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/></svg>Delivery time</li>
+                    <li><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="flex:none;margin-top:2px"><path d="M2.5 3.5a.5.5 0 0 1 0-1h11a.5.5 0 0 1 0 1h-11zm2-2a.5.5 0 0 1 0-1h7a.5.5 0 0 1 0 1h-7zM0 13a1.5 1.5 0 0 0 1.5 1.5h13A1.5 1.5 0 0 0 16 13V6a1.5 1.5 0 0 0-1.5-1.5h-13A1.5 1.5 0 0 0 0 6v7zm1.5.5A.5.5 0 0 1 1 13V6a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-.5.5h-13z"/></svg>Quantity match</li>
+                    <li><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="flex:none;margin-top:2px"><path d="M10.067.87a2.89 2.89 0 0 0-4.134 0l-.622.638-.89-.011a2.89 2.89 0 0 0-2.924 2.924l.01.89-.636.622a2.89 2.89 0 0 0 0 4.134l.637.622-.011.89a2.89 2.89 0 0 0 2.924 2.924l.89-.01.622.636a2.89 2.89 0 0 0 4.134 0l.622-.637.89.011a2.89 2.89 0 0 0 2.924-2.924l-.01-.89.636-.622a2.89 2.89 0 0 0 0-4.134l-.637-.622.011-.89a2.89 2.89 0 0 0-2.924-2.924l-.89.01-.622-.636zm.287 5.984-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7 8.793l2.646-2.647a.5.5 0 0 1 .708.708z"/></svg>Nursery trust</li>
+                    <li><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="flex:none;margin-top:2px"><path d="M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h13zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-13zM3 8.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5zm0-5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9A.5.5 0 0 1 3 5.5z"/></svg>Description quality</li>
+                </ul>
+            </div>
+            <div class="col-lg-7">
+                <div class="card-g">
+                    <div class="modes" role="group" aria-label="Evaluation priority">
+                        <button class="mode" data-mode="balanced" aria-pressed="true">Balanced</button>
+                        <button class="mode" data-mode="price" aria-pressed="false">Lowest price first</button>
+                        <button class="mode" data-mode="speed" aria-pressed="false">Fastest delivery first</button>
+                    </div>
+                    <div id="rankList" aria-live="polite"></div>
+                    <p class="note">Interactive demo with sample quotations and simplified weights, not GreenTender's actual scoring.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container">
+    <div class="cta">
+        <h2 class="section-title">Ready to take part in your next tender?</h2>
+        <p>Create an account to publish tenders or start submitting quotations.</p>
+        <a href="/register" class="btn btn-pill btn-light btn-lg me-2">Create account</a>
+        <a href="/login" class="btn btn-pill btn-line btn-lg">Login</a>
+    </div>
+</section>
+
+<footer>© 2026 GreenTender | AI-Assisted Tendering for Urban Greenery</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    const bids = [
+        { n:"Nursery A", price:74000, days:20, trust:0.9 },
+        { n:"Nursery B", price:68000, days:35, trust:0.7 },
+        { n:"Nursery C", price:70000, days:18, trust:0.8 }
+    ];
+    const weights = { balanced:{p:.35,d:.35,t:.30}, price:{p:.70,d:.15,t:.15}, speed:{p:.15,d:.70,t:.15} };
+    const inr = n => "₹" + n.toLocaleString("en-IN");
+    const norm = (v, lo, hi) => hi === lo ? 1 : (hi - v) / (hi - lo);
+
+    function renderRank(mode) {
+        const w = weights[mode], ps = bids.map(b => b.price), ds = bids.map(b => b.days);
+        const scored = bids.map(b => ({ ...b, score: Math.round(100 * (
+            w.p * norm(b.price, Math.min(...ps), Math.max(...ps)) +
+            w.d * norm(b.days, Math.min(...ds), Math.max(...ds)) + w.t * b.trust)) }))
+            .sort((a, b) => b.score - a.score);
+        document.getElementById("rankList").innerHTML = scored.map((b, i) => `
+            <div class="rank-row ${i === 0 ? "top" : ""}">
+                <div class="rank-no">${i + 1}</div>
+                <div>
+                    <div class="rank-head"><span>${b.n}</span><small>${inr(b.price)} · ${b.days} days · ${b.score}/100</small></div>
+                    <div class="bar"><span style="--w:${b.score}%"></span></div>
+                </div>
+                <span class="chip ${i === 0 ? "" : "wait"}">${i === 0 ? "Top ranked" : "Ranked"}</span>
+            </div>`).join("");
+    }
+    document.querySelectorAll(".mode").forEach(btn => btn.addEventListener("click", () => {
+        document.querySelectorAll(".mode").forEach(b => b.setAttribute("aria-pressed", b === btn));
+        renderRank(btn.dataset.mode);
+    }));
+    renderRank("balanced");
+</script>
+</body>
+</html>

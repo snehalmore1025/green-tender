@@ -1,0 +1,95 @@
+{% extends 'admin_base.html' %}
+
+{% block content %}
+<style>
+.delivery-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:16px}
+.delivery-stat{background:#fff;border:1px solid var(--line);border-radius:13px;padding:15px}
+.delivery-stat small{display:block;color:var(--muted);font-size:11px;margin-bottom:6px}
+.delivery-stat strong{font:700 22px Poppins;color:var(--gd)}
+.delivery-form{min-width:280px;display:grid;grid-template-columns:1fr 1fr;gap:4px 8px}
+.delivery-form .wide{grid-column:1/-1}
+.delivery-form .btn{justify-self:start;margin-top:3px}
+.delivery-form .form-control{margin:2px 0 5px}
+.status-note{font-size:10px;color:var(--muted);margin-top:3px}
+@media(max-width:900px){.delivery-grid{grid-template-columns:1fr}.delivery-form{min-width:250px}}
+</style>
+
+<section class="delivery-grid">
+  <div class="delivery-stat"><small>Approved quotations</small><strong>{{ deliveries|length }}</strong></div>
+  <div class="delivery-stat"><small>In progress</small><strong>{{ deliveries|selectattr('delivery_status','equalto','In Progress')|list|length }}</strong></div>
+  <div class="delivery-stat"><small>Delivered</small><strong>{{ deliveries|selectattr('delivery_status','equalto','Delivered')|list|length }}</strong></div>
+</section>
+
+<section class="card">
+  <div class="card-head">
+    <div>
+      <h3>Delivery Management</h3>
+      <p>Monitor approved work and update delivery status, dates, and remarks.</p>
+    </div>
+  </div>
+
+  {% if deliveries %}
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Tender / Location</th>
+          <th>Nursery</th>
+          <th>Quotation</th>
+          <th>Qty.</th>
+          <th>Current status</th>
+          <th>Update delivery</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for d in deliveries %}
+        <tr>
+          <td>
+            <strong>{{ d.title }}</strong>
+            <div style="color:var(--muted);font-size:10px">{{ d.location or '—' }}</div>
+          </td>
+          <td>
+            <strong>{{ d.nursery_name }}</strong>
+            <div style="color:var(--muted);font-size:10px">{{ d.owner_name or '' }}</div>
+          </td>
+          <td>#QT-{{ d.quotation_id }}</td>
+          <td>{{ d.quantity_available or '—' }}</td>
+          <td>
+            {% set current_status = d.delivery_status or 'Pending' %}
+            <span class="badge {{ 'delivered' if current_status == 'Delivered' else ('progress' if current_status == 'In Progress' else 'pending') }}">{{ current_status }}</span>
+            <div class="status-note">Expected: {{ d.expected_delivery_date or 'Not set' }}</div>
+            <div class="status-note">Actual: {{ d.actual_delivery_date or 'Not delivered' }}</div>
+            {% if d.delivery_updated_at %}<div class="status-note">Updated: {{ d.delivery_updated_at }}</div>{% endif %}
+            {% if d.delivery_remark %}<div class="status-note">Remark: {{ d.delivery_remark }}</div>{% endif %}
+          </td>
+          <td>
+            <form class="delivery-form" method="post" action="{{ url_for('admin_update_delivery', quotation_id=d.quotation_id) }}">
+              <label class="wide form-label">Status
+                <select class="form-control" name="delivery_status" required>
+                  {% for status in ['Pending', 'In Progress', 'Delivered'] %}
+                  <option value="{{ status }}" {% if current_status == status %}selected{% endif %}>{{ status }}</option>
+                  {% endfor %}
+                </select>
+              </label>
+              <label class="form-label">Expected date
+                <input class="form-control" type="date" name="expected_delivery_date" value="{{ d.expected_delivery_date or '' }}">
+              </label>
+              <label class="form-label">Actual date
+                <input class="form-control" type="date" name="actual_delivery_date" value="{{ d.actual_delivery_date or '' }}">
+              </label>
+              <label class="wide form-label">Remark
+                <textarea class="form-control" name="delivery_remark" rows="2" placeholder="Optional delivery remark">{{ d.delivery_remark or '' }}</textarea>
+              </label>
+              <button class="btn wide" type="submit"><i class="bi bi-save"></i> Save update</button>
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty">No approved quotations are available for delivery tracking yet.</div>
+  {% endif %}
+</section>
+{% endblock %}
